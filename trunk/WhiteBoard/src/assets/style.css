@@ -1,0 +1,8 @@
+/* CSS file */
+Panel.MainPanel
+{
+	border-thickness-bottom:0;
+	border-thickness-left:0;
+	border-thickness-right:0;
+	header-height:22;
+}
