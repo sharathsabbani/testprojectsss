@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" width="500" height="500" horizontalGap="2"
+	paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0" borderStyle="solid"
+	creationComplete="onCreationComplete(event)"  xmlns:components="com.wb.components.*">
+	<mx:Script>
+		<![CDATA[
+			import com.wb.components.DrawLine;
+			import com.wb.components.DrawRectangle;
+			import com.wb.components.DummyClass;
+			import com.wb.components.DrawCircle;
+			import com.wb.model.ModelLocator;
+			private var thickness:Array = ['1','2','3','4','5'];
+			private function onCreationComplete(vent:Event):void
+			{
+				lineButton.selected = true;
+				whiteBoard.selectedComponent = DrawLine;
+			}
+			
+			private function lineButtonClicked(event:Event):void
+			{
+				lineButton.selected = true;
+				rectangleButton.selected = circleButton.selected = curveButton.selected = false;
+				whiteBoard.selectedComponent = DrawLine;
+			}
+			
+			private function rectangleButtonClicked(event:Event):void
+			{
+				rectangleButton.selected = true;
+				lineButton.selected = circleButton.selected = curveButton.selected = false;
+				whiteBoard.selectedComponent = DrawRectangle;
+			}
+			
+			private function circleButtonClicked(event:Event):void
+			{
+				circleButton.selected = true;
+				rectangleButton.selected = lineButton.selected = curveButton.selected = false;
+				whiteBoard.selectedComponent = DrawCircle;
+			}
+			
+			private function curveButtonClicked(event:Event):void
+			{
+				curveButton.selected = true;
+				rectangleButton.selected = lineButton.selected = circleButton.selected = false;
+				whiteBoard.selectedComponent = DummyClass;
+			}
+			
+			private function assignColor(event:Event):void
+			{
+				ModelLocator.getInstance().pixelColor = colorPick.selectedColor;
+			}
+			
+			private function thicknessChanged(event:Event):void
+			{
+				ModelLocator.getInstance().pixelThickness = thicknessComboBox.selectedIndex + 1;
+			}
+		]]>
+	</mx:Script>
+	<mx:Style source="assets/style.css"/>
+	<mx:Panel title="Tools" height="100%" width="60" styleName="MainPanel"
+		layout="vertical" horizontalAlign="center" verticalGap="2" horizontalScrollPolicy="off">
+		<mx:Button id="lineButton" icon="@Embed('assets/Line.png')" click="lineButtonClicked(event)"  toggle="true" toolTip="Line"/>
+		<mx:Button id="rectangleButton" icon="@Embed('assets/Rectangle.png')" click="rectangleButtonClicked(event)"  toggle="true" toolTip="Rectangle"/>
+		<mx:Button id="circleButton" icon="@Embed('assets/Circle.png')" click="circleButtonClicked(event)"  toggle="true" toolTip="Circle"/>
+		<mx:Button id="curveButton" icon="@Embed('assets/pencil.png')" click="curveButtonClicked(event)"  toggle="true" toolTip="Pencil"/>
+		<mx:ColorPicker id="colorPick" width="30" height="30" change="assignColor(event)" toolTip="Click to Change Color"/>
+		<mx:ComboBox id="thicknessComboBox" width="48" dataProvider="{thickness}" toolTip="Pixel Thickness" change="thicknessChanged(event)"/>
+	</mx:Panel>
+	<mx:Panel title="White Board" height="100%" width="100%" styleName="MainPanel" verticalGap="5">
+		<components:WhiteBoard id="whiteBoard" width="100%" height="100%" />
+	</mx:Panel> 
+</mx:Application>
