@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" creationComplete="">
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.StringUtil;
+			import mx.events.ListEvent;
+			import mx.controls.DataGrid;
+			import mx.controls.Label;
+			import mx.core.UIComponent;
+			import mx.controls.Alert;
+
+			private function ongetChildren():void
+			{
+				getAll((swfloader.getChildAt(0) as Object).getChildAt(0).getChildAt(0) as UIComponent);
+			}
+
+			private function getAll(comp:UIComponent):void
+			{
+				for (var i:int = 0; i < comp.numChildren; i++)
+				{
+					if (comp.getChildAt(i) is UIComponent)
+					{
+						trace(comp.getChildAt(i));
+						comp.getChildAt(i).visible = true;
+						if (comp.getChildAt(i).name == "use_me")
+						{
+							trace((comp.getChildAt(i) as Label).text);
+								//Alert.show((comp.getChildAt(i) as Label).text);
+						}
+						if (comp.getChildAt(i).name == "data_Grid_URL_Of_Flower")
+						{
+							(comp.getChildAt(i) as DataGrid).addEventListener(ListEvent.ITEM_CLICK, onItemClick);
+						}
+						getAll(comp.getChildAt(i) as UIComponent);
+					}
+				}
+			}
+
+			private function onItemClick(event:ListEvent):void
+			{
+				var imgData:XML = event.itemRenderer.data as XML;
+				var pngUrl:String = imgData.url;
+				var periodIndex:Number = pngUrl.lastIndexOf('.');
+				var displayimgString:String = pngUrl.substr(periodIndex + 1, pngUrl.length);
+				if (displayimgString == "png")
+				{
+					imgPng.source = pngUrl;
+				}
+				else
+				{
+					imgPng.source = "";
+				}
+
+			}
+		]]>
+	</mx:Script>
+	<mx:SWFLoader id="swfloader" source="Search_Me.swf"/>
+	<mx:Button click="ongetChildren()" label="GetChildren" x="301" y="620"/>
+	<mx:Image id="imgPng" width="600" height="244"/>
+</mx:Application>

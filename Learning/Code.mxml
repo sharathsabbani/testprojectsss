@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" applicationComplete="on_Application_Complete ( event )" width="640"
+				height="480">
+
+	<mx:Panel title="DevHunt! '09 ActionScript Question" layout="absolute" left="0" right="0"
+			  top="0" bottom="0">
+
+		<mx:TextInput id="text_confidential" text="Th1515" horizontalCenter="-220" verticalCenter="-140"
+					  displayAsPassword="true"/>
+
+		<mx:RadioButtonGroup id="radiogroup1"/>
+
+		<mx:RadioButton label="Button 1" groupName="radiogroup1" selected="true" horizontalCenter="86"
+						verticalCenter="-140"/>
+		<mx:RadioButton label="Button 2" groupName="radiogroup1" selected="true" horizontalCenter="86"
+						verticalCenter="-110"/>
+
+		<mx:TitleWindow id="titlewindow_Popup" title="Panel is my father. Or mother." width="250" height="200"
+						horizontalCenter="175" verticalCenter="95" showCloseButton="true">
+		</mx:TitleWindow>
+
+		<mx:ComboBox id="combo_Colors" labelField="value" width="160" horizontalCenter="-220"
+					 verticalCenter="184">
+		</mx:ComboBox>
+
+	</mx:Panel>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+
+			private var arr_Colors:Array;
+
+			private function on_Application_Complete(event:FlexEvent):void
+			{
+				arr_Colors = new Array();
+				arr_Colors = [
+					{label: "Red", value: "#FF0000"},
+					{label: "Green", value: "#00FF00"},
+					{label: "Blue", value: "#0000FF"}
+					];
+
+				combo_Colors.dataProvider = new ArrayCollection(arr_Colors);
+
+			}
+		]]>
+	</mx:Script>
+</mx:Application>
