@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" width="50" height="50" creationComplete="onCreationcomplete()"
+		borderColor="red" borderStyle="solid" useHandCursor="true">
+	<mx:Script>
+		<![CDATA[
+			import events.GamePieceSelectedEvent;
+			import mx.core.Application;
+			import mx.core.UIComponent;
+			private var myTile:UIComponent;
+			private var borderUI:UIComponent;
+			public var pieceid:int;
+			[Bindable]
+			private var cSymbol:String;
+
+			public function set currentSymbol(value:String):void
+			{
+				cSymbol = value;
+				updateSymbol(value);
+			}
+
+			public function get currentSymbol():String
+			{
+				return cSymbol;
+			}
+
+			private function updateSymbol(sym:String):void
+			{
+				if (sym == ApplicationManager.SYMBOL)
+				{
+
+				}
+				else if (sym == ApplicationManager.SYMBOL_O)
+				{
+					myTile.graphics.beginFill(0xFFFF00);
+					myTile.graphics.drawCircle(25, 25, 23);
+				}
+				else
+				{
+					myTile.graphics.beginFill(0x888800);
+					myTile.graphics.drawCircle(25, 25, 23);
+				}
+			}
+
+			private function onCreationcomplete():void
+			{
+				myTile = new UIComponent();
+				myTile.graphics.beginFill(0xFFCC00);
+				myTile.graphics.drawRect(0, 0, 50, 50);
+				myTile.addEventListener(MouseEvent.MOUSE_OVER, onMouseover);
+				myTile.addEventListener(MouseEvent.MOUSE_OUT, onMouseout);
+				myTile.addEventListener(MouseEvent.CLICK, onMouseClick);
+				this.addChild(myTile);
+			}
+
+			private function onMouseClick(event:Event):void
+			{
+				dispatchEvent(new GamePieceSelectedEvent(pieceid));
+
+			}
+
+			private function onMouseout(event:MouseEvent):void
+			{
+				this.removeChild(borderUI);
+			}
+
+			private function onMouseover(event:MouseEvent):void
+			{
+				borderUI = new UIComponent();
+				borderUI.blendMode = BlendMode.MULTIPLY;
+				borderUI.graphics.lineStyle(3, 0x88FF00, 1);
+				borderUI.graphics.drawCircle(25, 19, 24);
+				borderUI.useHandCursor = true;
+				this.addChild(borderUI);
+			}
+		]]>
+	</mx:Script>
+</mx:Box>
