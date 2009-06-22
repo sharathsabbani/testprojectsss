@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import mx.controls.DataGrid;
+			import mx.controls.Label;
+			import mx.controls.Text;
+			import mx.controls.Button;
+			import mx.core.UIComponent;
+			import mx.controls.Alert;
+
+			private function unHideButton():void
+			{
+				(ldr.getChildAt(0) as Object).getChildAt(0).getChildAt(0).getChildAt(1).visible = true;
+				(ldr.getChildAt(0) as Object).getChildAt(0).getChildAt(0).getChildAt(1).getChildAt(0).visible = true;
+				(ldr.getChildAt(0) as Object).getChildAt(0).getChildAt(0).getChildAt(1).getChildAt(0).getChildAt(1).visible = true;
+			}
+
+//I found all the children's in the component by using recursive function(used trace)
+			private function knowObjects():void
+			{
+				visibleAll((ldr.getChildAt(0) as Object).getChildAt(0).getChildAt(0) as UIComponent);
+			}
+
+			private function visibleAll(obj:UIComponent):void
+			{
+				for (var i:int = 0; i < obj.numChildren; i++)
+				{
+					if (obj.getChildAt(i) is UIComponent)
+					{
+						trace(obj.getChildAt(i).toString());
+						obj.getChildAt(i).visible = true;
+						if (obj.getChildAt(i).toString() == "NewCode0.ldr.FlexLoader5.instance9.Dev_Hunt_Question_SWF_Search18.vbox_Two.use_me")
+						{
+							Alert.show((obj.getChildAt(i) as Label).text);
+						}
+						if (obj.getChildAt(i).toString() == "NewCode0.ldr.FlexLoader5.instance9.Dev_Hunt_Question_SWF_Search18.hbox_One.data_Grid_URL_Of_Flower")
+						{
+							(obj.getChildAt(i) as DataGrid).addEventListener(ListEvent.ITEM_CLICK, seeURL);
+						}
+						visibleAll(obj.getChildAt(i) as UIComponent);
+					}
+				}
+			}
+
+			private function seeURL(eve:ListEvent):void
+			{
+				mx.controls.Alert.show(eve.itemRenderer.data.toString());
+			}
+		]]>
+	</mx:Script>
+	<mx:SWFLoader id="ldr" width="800" height="640" source="Search_Me.swf"/>
+	<mx:Button label="UnHide" click="unHideButton()"/>
+	<mx:Button label="Show Children" click="knowObjects()"/>
+</mx:Application>
