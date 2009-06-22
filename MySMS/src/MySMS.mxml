@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+	width="368" height="452" showStatusBar="false" 
+	horizontalScrollPolicy="off" verticalScrollPolicy="off" cornerRadius="0" close="if(cnt){cnt.close();}"
+	creationCompleteEffect="{fadeIn}">
+	
+	<mx:Fade id="fadeIn" duration="1000" alphaFrom="0.4" alphaTo="1.0"/>
+		 
+	 <mx:Script>
+  <![CDATA[
+  	import mx.effects.Effect;
+  	import mx.effects.Fade;   
+  	import mx.core.Application;  
+  	import mx.utils.StringUtil; 
+  	import mx.controls.textClasses.TextRange;
+  	import mx.binding.utils.ChangeWatcher;
+  	import mx.events.ValidationResultEvent;
+    import mx.rpc.events.ResultEvent;
+    import mx.controls.Alert;
+    import com.sqlLite;
+  	
+  	
+    private var sqlcon:SQLConnection = new SQLConnection();
+    private var counts:int;
+  	public var con:sqlLite = new sqlLite();
+ 
+   
+     public function res(e:ResultEvent):void {
+    	
+    	Alert.show(''+e.result);
+     
+   }
+
+     public function send():void {
+   	
+		   	WS.getOperation('sendSMSToMany').send();
+		   //	amar.text = "amar";
+   	
+   }
+   
+     public var cnt:contactForm ;
+   
+     public function showContacts():void {
+   
+		  if(!cnt){
+		   	cnt = new contactForm();
+		   	
+
+				//   if(!this.contains(cnt)) {
+				   		  
+						   cnt.width = 320;
+						   cnt.height =350; 
+						   
+						   //this.addChild(cnt);
+						   cnt.open();
+						   cnt.activate();
+						   cnt.nativeWindow.x =nativeWindow.x + nativeWindow.width +20;
+						   cnt.nativeWindow.y =nativeWindow.y +btn1.y;
+
+		      		//}
+   	  		}
+  	 }
+   
+   	  public function removeContacts():void {
+				if(cnt){
+					
+				cnt.close();
+				cnt = null;
+			}
+   	 } 
+   
+      private function textArea_change(evt:Event):void {
+                callLater(updateStats, [evt]);
+     }
+
+      private function updateStats(evt:Event):void {
+       			
+                var nChars:uint = smsTxtArea.length;
+                
+                var str:String = "{0} characters";
+                
+                charCount.text = StringUtil.substitute(str,nChars);
+                
+                if(smsTxtArea.length == 120){
+                
+                	Alert.show("Message limit reached");
+           }
+      }     
+   
+  ]]>
+ </mx:Script>
+ <mx:Style source="main.css"/>
+   <mx:WebService id="WS" wsdl="http://www.aswinanand.com/sendsms.php?wsdl" 
+				showBusyCursor="true">
+ 		<mx:operation name="sendSMSToMany" result="res(event)">
+  				<mx:request>
+  					 <uid>
+   						 	{user.text}   <!--enter your login id here-->
+   					 </uid>
+   					 <pwd>
+   							 {password.text}   <!-- enter your password-->
+   					 </pwd>
+   					 <phone>
+    						 {phn.text}
+   					 </phone>
+    				 <msg>
+    						 {smsTxtArea.text}
+   					 </msg>
+  				</mx:request>
+		</mx:operation>
+  </mx:WebService>
+ 
+  <mx:Label text="Way2SMS user name" color="#f0000" fontWeight="bold" x="78" y="36"/>
+ 		<mx:TextInput id="user" x="78" y="62" focusAlpha="0"/>
+ 		
+		<mx:Label text="Way2SMS Password" color="#f0000" fontWeight="bold" x="83" y="104"/>
+		
+ 		<mx:TextInput id="password" displayAsPassword="true" x="78" y="130" focusAlpha="0"/>
+ 		
+ 		<mx:Label text="Please Enter Mobile Number :" color="#f0000"
+ 				  fontWeight="bold" x="83" y="160"/>
+ 				  
+ 		<mx:TextInput id="phn" x="78" y="186" focusAlpha="0"/>
+ 		
+ 		<mx:Label text="Type your SMS Here : " fontWeight="bold"
+ 				  color="#f0000" x="83" y="216"/>
+ 				  
+		 <mx:TextArea height="121" width="251" id="smsTxtArea" x="34" y="242"
+ 					  maxChars="120"  change="textArea_change(event);" focusAlpha="0"/>
+ 					  
+ 		 <mx:Button id="sendBtn" click="send();"
+ 					label="Send SMS" x="122" y="383" alpha=".2">
+ 		 </mx:Button>
+ 		 
+ 		 <mx:Button x="262" y="158" label="PhoneBook" click="showContacts()" alpha=".2" id="btn1"/>
+ 		 
+ 		 <mx:Label x="250" y="371" text="" id="charCount"/>
+ 	
+   </mx:WindowedApplication>

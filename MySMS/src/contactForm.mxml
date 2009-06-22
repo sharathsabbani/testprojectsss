@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" width="263" height="320" showTitleBar="false" showStatusBar="false" backgroundAlpha="0" 
+	   	   xmlns:ns1="*" systemChrome="none" transparent="true" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	       paddingTop="10" borderSides="none" resizable="false"
+	       closeEffect="{fadeOut}" showEffect="{fadeIn}" creationComplete="init();" creationCompleteEffect="{fadeIn}" close="if(addCnt){addCnt.close()}">
+	   
+		<mx:Fade id="fadeOut" duration="1000" alphaFrom="1.0" alphaTo="0.0"/>
+		<mx:Fade id="fadeIn" duration="1000" alphaFrom="0.4" alphaTo="1.0"/>
+		
+<mx:Script>
+	<![CDATA[
+		import mx.effects.effectClasses.FadeInstance;
+		import mx.effects.Effect;
+		import mx.effects.Zoom;
+		import mx.effects.Fade;
+		import mx.controls.Image;
+		import mx.containers.HBox;
+		import mx.controls.TextArea;
+		import mx.controls.Alert;
+		import mx.core.Application;
+		import mx.controls.Button;
+		import com.manipDB;
+
+		private var that:* = Application.application;
+		
+		public var manipData:manipDB;
+		
+		public var addCnt:addContacts;
+		
+		[Embed ("assets/close.png")]
+            private var closeImg:Class;
+            
+        [Embed ("assets/add_user_64.png")]
+            private var addUserImg:Class;
+		
+		private function newContacts(event:MouseEvent):void {
+			
+			if(!addCnt){
+			
+			addCnt = new addContacts();	
+			
+			if(!this.contains(addCnt)){
+			
+			this.visible = false;
+			
+			addCnt.open();
+			addCnt.activate();
+			addCnt.nativeWindow.x = nativeWindow.x  ;
+			addCnt.nativeWindow.y = nativeWindow.y  ;
+			
+			}
+		  }
+			
+		}
+		
+		// to remove addContact form at close button.
+		public function removeContact(event:MouseEvent):void {
+			//this.removeChild(addCnt);
+			(Application.application as MySMS).removeContacts();
+			//this.visible = true;
+		}
+		
+		public function closeContact():void {
+			
+				if(addCnt !=null){
+				
+				addCnt.close();
+				addCnt = null;
+				Application.application.cnt.visible = true;
+			 }
+		  }
+		
+		  public function init():void {
+			 
+			 manipData = new manipDB();
+			 if(manipData.databaseFile.exists && manipData.databaseFile!= null){
+				
+				manipData.init();
+				
+				
+			} 
+			else{
+				manipData.createDatabase(manipData.databaseFile, 1);
+				
+			} 
+			
+		}  
+		
+		
+		public function toRcpt(event:MouseEvent):void {
+			
+			(Application.application as MySMS).phn.text = String(dg1.selectedItem.phone);
+		}
+		
+		private function dragStart(event:MouseEvent):void {
+			
+			//if(event.target == this.titleBar){
+					nativeWindow.startMove();
+			//}
+		}
+		
+	]]>
+</mx:Script>	 
+
+<mx:Panel id="pnl" mouseDown="dragStart(event);" width="260">
+	
+
+ 
+		
+		<mx:DataGrid id="dg1" width="100%" height="215" x="5" y="43">
+			
+                  <mx:columns>
+
+                        <mx:DataGridColumn id="nameCol" width="60" dataField="name" headerText="Name" textAlign="center"/>
+
+                        <mx:DataGridColumn id="departmentCol" width="100" dataField="phone" headerText="Phone" textAlign="center">
+                        
+                        <mx:itemRenderer>
+						<mx:Component>
+						<mx:HBox width="100%" height="100%" horizontalGap="1" 
+							horizontalAlign="center" verticalAlign="middle" horizontalScrollPolicy="off">
+							
+
+							<mx:Image source="assets/phone_add.png" verticalAlign="middle" horizontalAlign="left" 
+								  scaleContent="false" maintainAspectRatio="true" width="20" height="100%"
+								  click="{outerDocument.toRcpt(event)}"/>
+								  
+							<mx:Label id="rowTxt" width="50%" text="{data.phone}"/>
+							
+							
+						</mx:HBox> 
+						
+						</mx:Component>
+						</mx:itemRenderer>
+						
+                        
+                        </mx:DataGridColumn>
+                        <mx:DataGridColumn id="remUser" width="30" dataField="DelUser" headerText="Del">
+                        	<mx:itemRenderer>
+                        		<mx:Component>
+                        			<mx:Image source="assets/deleteCont.png" verticalAlign="middle" horizontalAlign="right" 
+								  			  scaleContent="false" maintainAspectRatio="true" width="20" height="100%"
+								  			  click="outerDocument.manipData.createDeleteStatements(event)"
+								 />
+                        		</mx:Component>
+                        	</mx:itemRenderer>
+                        </mx:DataGridColumn>
+                  </mx:columns>
+		</mx:DataGrid>
+		
+		<mx:ControlBar width="100%" paddingLeft="30">
+		<mx:Image id="button1" source="{addUserImg}" width="125" height="20" click="newContacts(event);"/>
+		<mx:Image id="button2" source="{closeImg}" width="16" height="16" click="removeContact(event);"/>
+		</mx:ControlBar>
+		
+
+    
+</mx:Panel>
+</mx:Window>
