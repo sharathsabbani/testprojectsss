@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" xmlns:ns1="comp.*" width="90%
+">
+<mx:Script>
+<![CDATA[
+import mx.collections.ArrayCollection;
+import mx.controls.Alert;
+import flash.data.SQLConnection;
+import flash.events.SQLErrorEvent;
+import flash.events.SQLEvent;
+import flash.data.SQLStatement;
+import flash.filesystem.File;
+
+public var conn:SQLConnection = new SQLConnection();
+public var dbFile:File = File.applicationStorageDirectory.resolvePath("emaildata.db");
+
+public function init():void {
+conn.addEventListener(SQLEvent.OPEN, openDBHandler);
+conn.addEventListener(SQLErrorEvent.ERROR, errorDBHandler);
+conn.openAsync(dbFile);
+}
+
+public function openDBHandler(event:SQLEvent):void {
+trace("db opened, now making new sql");
+//create tables, will do nothing if table already exists
+var sql:String =
+"CREATE TABLE IF NOT EXISTS maillist(id INTEGER PRIMARY KEY AUTOINCREMENT,emailid TEXT,valchk BOOLEAN default true)";
+var createStmt:SQLStatement = new SQLStatement();
+createStmt.sqlConnection = conn;
+createStmt.text = sql;
+createStmt.addEventListener(SQLEvent.RESULT, dbReadyResult);
+createStmt.addEventListener(SQLErrorEvent.ERROR, errorDBHandler);
+createStmt.execute();
+loadMailListData();
+}
+
+public function dbReadyResult(event:SQLEvent):void {
+//mainView.selectedChild = clientsView;
+trace("all done, let's boogie");
+}
+
+public function errorDBHandler(event:SQLErrorEvent):void {
+trace("Error message:", event.error.message);
+trace("Details:", event.error.details);
+}
+public function addNewMailId():void
+{
+var sql:String ="INSERT INTO maillist(emailid) values (:mailid);";
+var insertStmt:SQLStatement = new SQLStatement();
+insertStmt.sqlConnection = conn;
+insertStmt.text = sql;
+insertStmt.parameters[":mailid"] = mailIdTxt.text;
+insertStmt.addEventListener(SQLEvent.RESULT, dbReadyResult);
+insertStmt.addEventListener(SQLErrorEvent.ERROR, errorDBHandler);
+insertStmt.execute();
+}
+private var selectStmt:SQLStatement = new SQLStatement();
+[Bindable]
+public var emailListArr:ArrayCollection;
+public function loadMailListData():void
+{
+var sql:String ="select emailid from maillist;";
+selectStmt.sqlConnection = conn;
+selectStmt.text = sql;
+selectStmt.addEventListener(SQLEvent.RESULT, selectResultHandler);
+selectStmt.addEventListener(SQLErrorEvent.ERROR, errorDBHandler);
+selectStmt.execute();
+}
+private function selectResultHandler(event:SQLEvent):void
+{
+var result:SQLResult = selectStmt.getResult();
+emailListArr = new ArrayCollection(result.data);
+for(var i:int = 0; i < emailListArr.length;i++)
+{
+trace("datas:"+ emailListArr[i].emailid.toString());
+}
+}
+]]>
+</mx:Script>
+<mx:Button x="10" y="20" label="Button" click="addNewMailId()"/>
+<mx:TextInput x="92" y="20" id="mailIdTxt"/>
+
+</mx:WindowedApplication>

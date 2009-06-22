@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" width="225" height="290" showTitleBar="false" showStatusBar="false" backgroundAlpha="0" 
+	   	   systemChrome="none" transparent="true" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	       paddingTop="10" borderSides="none" resizable="false"
+	       closeEffect="{fadeOut}" showEffect="{fadeIn}" creationCompleteEffect="{fadeIn}" creationComplete="init();">
+	    
+	    <mx:Fade id="fadeOut" duration="1000" alphaFrom="1.0" alphaTo="0.0"/>
+		<mx:Fade id="fadeIn" duration="1000" alphaFrom="0.4" alphaTo="1.0"/>
+		
+		<mx:Script>
+		<![CDATA[
+		  import com.manipDB;
+		  import mx.controls.Alert;
+		  import mx.core.Application;
+		  
+		  private var manipData:manipDB
+		  
+		  private function init():void {
+		  
+		  	manipData = new manipDB();
+		  	
+		  }
+		  
+		]]>
+	</mx:Script>
+		
+		<mx:Panel width="224" height="250" 
+			borderColor="0xff00ee" borderStyle="solid" layout="absolute">
+	
+	
+	<mx:VBox x="22" y="10" height="181">
+	<mx:Label x="68" y="29" text="Contact Name"/>
+	<mx:TextInput id="txt1"/>
+	<mx:Label x="68" y="85" text="Mobile Number"/>
+	<mx:TextInput id="txt2" x="32" y="111" maxChars="10" restrict="[0-9]"/>
+	<mx:HBox paddingLeft="30" height="59" width="150" horizontalGap="40" paddingTop="20">
+	<mx:Image source="assets/add.png" x="68" y="189" 
+		click="manipData.createInsertStatements()"/>
+	<mx:Image source="assets/delete.png" click="Application.application.cnt.closeContact();"/>
+	</mx:HBox>
+	</mx:VBox>
+</mx:Panel>
+</mx:Window>

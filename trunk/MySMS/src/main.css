@@ -1,0 +1,66 @@
+/* CSS file */
+Panel {
+   borderColor: #006600;
+   borderAlpha: 0;
+   borderThicknessLeft: 5;
+   borderThicknessTop: 1;
+   borderThicknessBottom: 3;
+   borderThicknessRight: 3;
+   roundedBottomCorners: true;
+   cornerRadius: 14;
+   headerHeight: 26;
+   backgroundAlpha: 0.62;
+   headerColors: #003300, #cc3300;
+   footerColors: #003300, #c7c7c7;
+   backgroundColor: #cccccc; 
+   dropShadowEnabled: true;
+   shadowDistance: 0;
+   shadowDirection: right;
+   dropShadowColor: #666600;
+   titleStyleName: "mypanelTitle";
+}
+
+.mypanelTitle {
+   letterSpacing: 4;
+   color: #6699cc; 
+   textAlign: right;
+}
+
+TextArea {
+   fontFamily: Trebuchet MS;
+   color: #666666;
+   paddingLeft: 30;
+   paddingRight: 2;
+   textIndent: 0;
+   letterSpacing: 1;
+   backgroundAlpha: 0.79;
+   backgroundColor: #ffffff;
+   borderColor: #3399cc;
+   borderThickness: 1;
+   cornerRadius: 20;
+   dropShadowColor: #336699;
+   dropShadowEnabled: true;
+   shadowDistance: 1;
+}
+
+TextInput {
+	fontFamily: Trebuchet MS;
+   	color: #666666;
+   	backgroundAlpha: 0.79;
+   	backgroundColor: #ffffff;
+   	borderColor: #3399cc;
+   	borderStyle: solid;
+   	borderThickness: 1;
+   	cornerRadius: 7;
+   	dropShadowColor: #336699;
+   	dropShadowEnabled: false;
+   	shadowDistance: 1;
+   	paddingLeft: 6;
+   	
+
+   
+
+
+	
+}
+
