@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%"
+	backgroundColor="WHITE">
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import com.TicktokTieCmpt;
+			[Bindable] private var player1Name: String;
+			[Bindable] private var player2Name: String;
+			[Bindable] private var player1BallColor: uint;
+			[Bindable] private var player2BallColor: uint;
+			[Bindable] private var playerPlaying: String = 'player1';
+			[Bindable] private var player1BallCount: int = 0;
+			[Bindable] private var player2BallCount: int = 0;
+			[Bindable] private var sourceHBox: HBox;
+			[Bindable] private var distinationHBox: HBox;
+			[Bindable] private var gameOver: Boolean = false;
+			private function startGame(): void{
+				player1box1.removeAllChildren();
+				player1box2.removeAllChildren();
+				player1box3.removeAllChildren();
+				player1box4.removeAllChildren();
+				player1box5.removeAllChildren();
+				player2box1.removeAllChildren();
+				player2box2.removeAllChildren();
+				player2box3.removeAllChildren();
+				player2box4.removeAllChildren();
+				player2box5.removeAllChildren();
+				box11.removeAllChildren();
+				box12.removeAllChildren();
+				box13.removeAllChildren();
+				box21.removeAllChildren();
+				box22.removeAllChildren();
+				box23.removeAllChildren();
+				box31.removeAllChildren();
+				box32.removeAllChildren();
+				box33.removeAllChildren();
+				
+				player1box1.addChild(new TicktokTieCmpt(player1BallColor, player1Name));
+				player1box2.addChild(new TicktokTieCmpt(player1BallColor, player1Name));
+				player1box3.addChild(new TicktokTieCmpt(player1BallColor, player1Name));
+				player1box4.addChild(new TicktokTieCmpt(player1BallColor, player1Name));
+				player1box5.addChild(new TicktokTieCmpt(player1BallColor, player1Name));
+				
+				player2box1.addChild(new TicktokTieCmpt(player2BallColor, player2Name));
+				player2box2.addChild(new TicktokTieCmpt(player2BallColor, player2Name));
+				player2box3.addChild(new TicktokTieCmpt(player2BallColor, player2Name));
+				player2box4.addChild(new TicktokTieCmpt(player2BallColor, player2Name));
+				player2box5.addChild(new TicktokTieCmpt(player2BallColor, player2Name));
+				
+				playerPlaying = player1Name;
+				player.text = player1Name+"'s Turn";
+				console.text = player1Name+ " :";
+				player1BallCount = 0;
+				player2BallCount = 0;
+				playAgain.visible = false;
+				playAgain.includeInLayout = false;
+			}
+			private function validate(): void{
+				if(player1NameTxtIp.text == "" || player2NameTxtIp.text == "" || player1NameTxtIp.text == player2NameTxtIp.text){
+					Alert.show("Please Enter Correct Details");
+				}
+				else if(player1BallColorTxtIp.selectedColor == player2BallColorTxtIp.selectedColor){
+					Alert.show("Both Players Cannot select same color");
+				}
+				else{
+					player1Name = player1NameTxtIp.text;
+					player2Name = player2NameTxtIp.text;
+					player1BallColor = player1BallColorTxtIp.selectedColor;
+					player2BallColor = player2BallColorTxtIp.selectedColor;
+					
+					viewStack.selectedIndex = 1;
+					newGame.visible = true;
+					newGame.includeInLayout = true;
+					if(player1box1 != null){
+						startGame();
+					}
+				}
+			}
+			private function moveBallHandler(event: Event): void
+			{
+				if(gameOver){
+					startGame();
+					gameOver = false;
+					return;
+				}
+				var targetBox: HBox; 
+				var ball: TicktokTieCmpt;
+				if(playerPlaying == player1Name && event.target as HBox && (event.target as HBox).getChildren().length == 0){
+					if(player1BallCount == 0){
+						playAgain.visible = true;
+						playAgain.includeInLayout = true;
+						ball = player1box1.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player1box1.removeAllChildren();
+					}
+					else if(player1BallCount == 1){
+						ball = player1box2.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player1box2.removeAllChildren();
+					}
+					else if(player1BallCount == 2){
+						ball = player1box3.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player1box3.removeAllChildren();
+					}
+					else if(player1BallCount == 3){
+						ball = player1box4.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player1box4.removeAllChildren();
+					}
+					else if(player1BallCount == 4){
+						ball = player1box5.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player1box5.removeAllChildren();
+					}
+					player1BallCount++;
+					targetBox = event.target as HBox;
+					targetBox.addChild(ball);
+					console.text = console.text+ targetBox.id;
+					console.text = console.text+'\n'+player2Name+' :';
+					playerPlaying = player2Name;
+					player.text = player2Name+"'s Turn";
+					player.setStyle("color",player2BallColor);
+					if(player1BallCount >= 3){
+						validatePuzzle(player1Name);
+					}
+				}
+				else if(playerPlaying == player2Name && event.target as HBox && (event.target as HBox).getChildren().length == 0){
+					if(player2BallCount == 0){
+						ball = player2box1.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player2box1.removeAllChildren();
+					}
+					else if(player2BallCount == 1){
+						ball = player2box2.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player2box2.removeAllChildren();
+					}
+					else if(player2BallCount == 2){
+						ball = player2box3.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player2box3.removeAllChildren();
+					}
+					else if(player2BallCount == 3){
+						ball = player2box4.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player2box4.removeAllChildren();
+					}
+					else if(player2BallCount == 4){
+						ball = player2box5.getChildAt(0) as TicktokTieCmpt;
+						ball.cmptX = 50;
+						ball.cmptY = 50;
+						player2box5.removeAllChildren();
+					}
+					player2BallCount++;
+					targetBox = event.target as HBox;
+					targetBox.addChild(ball);
+					playerPlaying = player1Name;
+					player.text = player1Name+"'s Turn";
+					console.text = console.text+ targetBox.id;
+					console.text = console.text+'\n'+player1Name+' :';
+					player.setStyle("color",player1BallColor);
+					
+					if(player2BallCount >= 3){
+						validatePuzzle(player1Name);
+					}
+				}
+				else{
+					console.text = console.text+ '\n cannot move to here';
+					console.text = console.text+'\n'+playerPlaying+' :';
+					return;
+				}
+			}
+			private function validatePuzzle(playerName: String): void
+			{
+				var parentHBox: HBox;
+				var childHBox: HBox;
+				var playerCmpt: String;
+				//Horizontal Check
+				for(var i: int = 0; i< 3; i++){
+					if(i == 0){
+						parentHBox = hbox1;
+					}
+					else if(i == 1){
+						parentHBox = hbox2;
+					}
+					else if(i == 2){
+						parentHBox = hbox3;
+					}
+					var similarBox: int = 1;
+					for(var j: int = 0; j< 3; j++){
+						childHBox = parentHBox.getChildAt(j) as HBox;
+						if(childHBox.getChildren().length != 0){
+							if(j == 0){
+								playerCmpt = (childHBox.getChildAt(0) as TicktokTieCmpt).playerName;
+							}
+							else if(j == 1 && playerCmpt != (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+								break
+							}
+							else if(j == 2 && playerCmpt != (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+								break;
+							}
+							else{
+								similarBox++;
+								if(similarBox == 3){
+									Alert.show(playerCmpt+" Win");
+									gameOver = true;
+									return;
+								}
+							}
+						}
+						else{
+							break;
+						}
+					}
+				}
+				//Vertical Check
+				for(i = 0; i<3; i++){
+					similarBox = 0;
+					playerCmpt = '';
+					parentHBox = vbox1.getChildAt(1) as HBox;
+					childHBox = parentHBox.getChildAt(i) as HBox;
+					if(childHBox.getChildren().length !=0){
+						playerCmpt = (childHBox.getChildAt(0) as TicktokTieCmpt).playerName;
+						similarBox++;
+					}
+					if(playerCmpt != ''){
+						parentHBox = vbox1.getChildAt(2) as HBox;
+						childHBox = parentHBox.getChildAt(i) as HBox;
+						if(childHBox.getChildren().length !=0 && playerCmpt == (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+							similarBox++;
+						}
+						if(similarBox == 2){
+							parentHBox = vbox1.getChildAt(3) as HBox;
+							childHBox = parentHBox.getChildAt(i) as HBox;
+							if(childHBox.getChildren().length !=0 && playerCmpt == (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+								similarBox++;
+							}
+							if(similarBox == 3){
+								Alert.show(playerCmpt+" Win");
+								gameOver = true;
+								if(playerCmpt == player1Name){
+									player.text = playerCmpt+" Win";
+									player.setStyle("color",player1BallColor);
+								}
+								else{
+									player.text = playerCmpt+" Win";
+									player.setStyle("color",player2BallColor);
+								}
+								return;
+							}
+						}
+					}
+				}
+				//Cross Check
+				for(i = 0,j=0; i<2; i++){
+					similarBox = 0;
+					playerCmpt = '';
+					parentHBox = vbox1.getChildAt(1) as HBox;
+					if(i == 0){
+						childHBox = parentHBox.getChildAt(j) as HBox;
+						j++;
+						if(childHBox.getChildren().length !=0){
+							playerCmpt = (childHBox.getChildAt(0) as TicktokTieCmpt).playerName;
+							similarBox++;
+						}
+					}
+					else{
+						childHBox = parentHBox.getChildAt(j) as HBox;
+						j--;
+						if(childHBox.getChildren().length !=0){
+							playerCmpt = (childHBox.getChildAt(0) as TicktokTieCmpt).playerName;
+							similarBox++;
+						}
+					}
+					if(playerCmpt != ""){
+						parentHBox = vbox1.getChildAt(2) as HBox;
+						if(i == 0){
+							childHBox = parentHBox.getChildAt(j) as HBox;
+							j++;
+							if(childHBox.getChildren().length !=0 && playerCmpt == (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+								similarBox++;
+							}
+						}
+						else{
+							childHBox = parentHBox.getChildAt(j) as HBox;
+							j--;
+							if(childHBox.getChildren().length !=0 && playerCmpt == (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+								similarBox++;
+							}
+						}
+						if(similarBox == 2){
+							parentHBox = vbox1.getChildAt(3) as HBox;
+							if(i == 0){
+								childHBox = parentHBox.getChildAt(j) as HBox;
+								if(childHBox.getChildren().length !=0 && playerCmpt == (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+									similarBox++;
+								}
+								if(similarBox == 3){
+									Alert.show(playerCmpt+" Win");
+									gameOver = true;
+									if(playerCmpt == player1Name){
+										player.text = playerCmpt+" Win";
+										player.setStyle("color",player1BallColor);
+									}
+									else{
+										player.text = playerCmpt+" Win";
+										player.setStyle("color",player2BallColor);
+									}
+									return;
+								}
+							}
+							else{
+								childHBox = parentHBox.getChildAt(j) as HBox;
+								if(childHBox.getChildren().length !=0 && playerCmpt == (childHBox.getChildAt(0) as TicktokTieCmpt).playerName){
+									similarBox++;
+								}
+								if(similarBox == 3){
+									Alert.show(playerCmpt+" Win");
+									gameOver = true;
+									if(playerCmpt == player1Name){
+										player.text = playerCmpt+" Win";
+										player.setStyle("color",player1BallColor);
+									}
+									else{
+										player.text = playerCmpt+" Win";
+										player.setStyle("color",player2BallColor);
+									}
+									return;
+								}
+							}
+						}
+					}
+				}
+				if(player1BallCount == 5){
+					Alert.show("Game Tie.. Play Again..");
+					gameOver = true;
+					return;
+				}
+			}
+			private function newGamehandler(): void{
+				viewStack.selectedIndex = 0;
+				player1NameTxtIp.text = "";
+				player2NameTxtIp.text = "";
+				player1BallColorTxtIp.selectedColor = 000000;
+				player2BallColorTxtIp.selectedColor = 000000;
+				newGame.visible = false;
+				newGame.includeInLayout = false;
+				playAgain.visible = false;
+				playAgain.includeInLayout = false;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:ApplicationControlBar width="100%" horizontalAlign="center">
+		<mx:Text text="WELCOME TO TIC TAC TOE" fontSize="18" textAlign="center" width="100%"/>
+		<mx:LinkButton id="newGame" label="New Game" click="newGamehandler()" visible="false" includeInLayout="false"/>
+		<mx:LinkButton id="playAgain" label="Play Again.." click="{startGame()}" visible="false" includeInLayout="false"/>
+	</mx:ApplicationControlBar>
+	
+	<mx:ViewStack id="viewStack" width="100%" height="100%">
+		
+		<mx:VBox id="playerDetails" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+			<mx:HBox>
+				<mx:Form borderStyle="solid" borderColor="BLACK">
+					<mx:FormHeading label="PLAYER 1"/>
+					<mx:FormItem label="Name:">
+						<mx:TextInput id="player1NameTxtIp" text="Player 1"/>
+					</mx:FormItem>
+					<mx:FormItem label="Ball Color:">
+						<mx:ColorPicker id="player1BallColorTxtIp"/>
+					</mx:FormItem>
+				</mx:Form>	
+				<mx:Form borderStyle="solid" borderColor="BLACK">
+					<mx:FormHeading label="PLAYER 2"/>
+					<mx:FormItem label="Name:">
+						<mx:TextInput id="player2NameTxtIp" text="Player2"/>
+					</mx:FormItem>
+					<mx:FormItem label="Ball Color:">
+						<mx:ColorPicker id="player2BallColorTxtIp"/>
+					</mx:FormItem>
+				</mx:Form>
+			</mx:HBox>
+			<mx:Button label="Submit" click="validate()"/>
+		</mx:VBox>
+		
+		<mx:VBox id="ticTacTtoe" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" creationComplete="startGame()">
+			<mx:HBox id="playerCmpt" width="70%" height="70%" horizontalAlign="center" verticalAlign="middle">
+				<mx:VBox id="vbox1" verticalGap="0" width="100%" horizontalAlign="center">
+					<mx:Text id="player" fontSize="14" text="{player1Name}'s Turn" color="{player1BallColor}"/>
+					<mx:HBox id="hbox1" horizontalGap="0">
+						<mx:HBox id="box11" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>
+						<mx:HBox id="box12" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>
+						<mx:HBox id="box13" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>	
+					</mx:HBox>
+					<mx:HBox id="hbox2" horizontalGap="0">
+						<mx:HBox id="box21" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>
+						<mx:HBox id="box22" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>
+						<mx:HBox id="box23" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>	
+					</mx:HBox>
+					<mx:HBox id="hbox3" horizontalGap="0">
+						<mx:HBox id="box31" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>
+						<mx:HBox id="box32" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>
+						<mx:HBox id="box33" borderColor="BLACK" width="100" height="100" borderStyle="solid" click="moveBallHandler(event)"/>	
+					</mx:HBox>
+				</mx:VBox>
+				<mx:VBox id="player1VBox" horizontalAlign="center" verticalGap="0">
+					<mx:Text text="{player1Name}"/>
+					<mx:HBox id="player1box1" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+					<mx:HBox id="player1box2" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+					<mx:HBox id="player1box3" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>	
+					<mx:HBox id="player1box4" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+					<mx:HBox id="player1box5" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+				</mx:VBox>
+				<mx:VBox id="player2VBox" horizontalAlign="center" verticalGap="0">
+					<mx:Text text="{player2Name}"/>
+					<mx:HBox id="player2box1" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+					<mx:HBox id="player2box2" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+					<mx:HBox id="player2box3" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+					<mx:HBox id="player2box4" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>
+					<mx:HBox id="player2box5" borderColor="BLACK" width="60" height="50" borderStyle="solid"/>	
+				</mx:VBox>
+			</mx:HBox>
+			<mx:HBox width="100%" height="30%" horizontalGap="0">
+				<mx:Text text="Console: "/>
+				<mx:TextArea id="console" editable="false" width="100%" height="100%" text="{player1Name} :"/>
+			</mx:HBox>
+			
+		</mx:VBox>
+	</mx:ViewStack>
+</mx:Application>
