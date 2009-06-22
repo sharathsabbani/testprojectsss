@@ -1,0 +1,19 @@
+/* CSS file */
+HBox.WhiteSquare
+{
+	/*  borderSkin: Embed(source="../images/white_bg.png",scaleGridBottom="29",scaleGridLeft="6",scaleGridTop="7",scaleGridRight="38"); */
+	 borderSkin: Embed(source="../images/blackbg.png");
+}
+
+HBox.BlackSquare
+{
+	/* borderSkin: Embed(source="../images/black_bg.png",scaleGridBottom="17",scaleGridLeft="6",scaleGridTop="4",scaleGridRight="67"); */
+	borderSkin: Embed(source="../images/blackbg1.png");
+	
+	
+}
+
+HBox.Demo
+{
+	borderSkin: Embed(source="../images/whit_bg_bar.png",scaleGridTop="10",scaleGridLeft="9",scaleGridRight="160",scaleGridBottom="11");
+}
